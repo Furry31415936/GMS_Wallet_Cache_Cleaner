@@ -1,7 +1,11 @@
 #!/system/bin/sh
-# 请不要硬编码 /magisk/modname/... ; 请使用 $MODDIR/...
-# 这将使你的脚本更加兼容，即使Magisk在未来改变了它的挂载点
-MODDIR=${0%/*}
+# 模块服务脚本 - 在模块安装后执行初始化任务
 
-# 这个脚本将以 late_start service 模式执行
-# 更多信息请访问 Magisk 主题
+# 创建备份目录
+mkdir -p /data/adb/gms_backup
+
+# 设置适当的权限
+chmod 755 /data/adb/gms_backup
+
+# 记录模块激活
+echo "$(date): GMS Wallet Cache Cleaner module activated" >> /data/adb/gms_backup/module_log.txt

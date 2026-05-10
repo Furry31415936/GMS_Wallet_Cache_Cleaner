@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>GMS Wallet Cache Cleaner</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #121212; color: #fff; }
+        button { padding: 15px 25px; margin: 10px; font-size: 16px; border-radius: 8px; cursor: pointer; }
+        .red { background: #c62828; color: white; border: none; }
+        .green { background: #2e7d32; color: white; border: none; }
+        .info { background: #1565c0; color: white; border: none; }
+        .warning { background: #ff9800; color: white; border: none; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .log-container { background: #1e1e1e; padding: 15px; border-radius: 8px; margin-top: 20px; max-height: 300px; overflow-y: auto; }
+        h1 { color: #4fc3f7; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #2e7d3220; border: 1px solid #2e7d32; }
+        .error { background: #c6282820; border: 1px solid #c62828; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 GMS / Google Wallet 缓存清理器</h1>
+        <p>用于解决Google钱包因设备认证问题导致的使用限制</p>
+        <p>当前时间: <span id="time"></span></p>
+        
+        <div class="status success">
+            <strong>💡 使用说明:</strong><br>
+            1. 点击"📦 备份当前GMS数据"进行备份<br>
+            2. 点击"🗑️ 清除Cache"清理缓存<br>
+            3. 点击"🔄 重启设备"使更改生效<br>
+            4. 如有问题可点击"🔄 一键恢复备份"
+        </div>
+        
+        <button class="info" onclick="backup()">📦 备份当前GMS数据</button>
+        <button class="red" onclick="clearCache()">🗑️ 清除Cache（推荐）</button>
+        <button class="warning" onclick="clearDataSelective()">⚠️ 选择性清除Data（谨慎）</button>
+        <button class="green" onclick="restore()">🔄 一键恢复备份</button>
+        <button class="info" onclick="reboot()">🔄 重启设备</button>
+        
+        <div class="log-container">
+            <h3>操作日志:</h3>
+            <pre id="log"></pre>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,33 +1,26 @@
-#!/sbin/sh
+#!/system/bin/sh
+# This is the installation script for Magisk modules
 
-#################
-# Initialization
-#################
-
-umask 022
-
-# echo before loading util_functions
-ui_print() { echo "$1"; }
-
-require_new_magisk() {
-  ui_print "********************************"
-  ui_print " Please install Magisk v20.4+! "
-  ui_print "********************************"
-  exit 1
-}
-
-#########################
-# Load util_functions.sh
-#########################
-
+# Define variables
 OUTFD=$2
 ZIPFILE=$3
 
-mount /data 2>/dev/null
+# UI print function
+ui_print() { echo -e "ui_print $1\nui_print" > /proc/self/fd/$OUTFD; }
 
-[ -f /data/adb/magisk/util_functions.sh ] || require_new_magisk
-. /data/adb/magisk/util_functions.sh
-[ $MAGISK_VER_CODE -lt 20400 ] && require_new_magisk
+# Print module name
+ui_print "********************************"
+ui_print "   GMS Wallet Cache Cleaner     "
+ui_print "********************************"
 
-install_module
-exit 0
+# Extract files
+unzip -o "$ZIPFILE" -d $TMPDIR >&2
+
+# Copy files to target directory
+cp -af $TMPDIR/* $MODPATH/
+
+# Set permissions
+set_perm_recursive $MODPATH 0 0 0755 0644
+set_perm $MODPATH/clear.sh 0 0 0755
+
+ui_print "Module installed successfully!"

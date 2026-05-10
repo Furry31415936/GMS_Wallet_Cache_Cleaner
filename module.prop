@@ -1,7 +1,6 @@
-# id 只能填 字母 数字 半角符号
-id=Module-Template
-name=模块模板
-version=v1
-versionCode=1
-author=Petit Abba
-description=一个简短的描述
+id=gms_wallet_cache_cleaner
+name=GMS Wallet Cache Cleaner
+version=v1.0
+versionCode=100
+author=Assistant
+description=一键备份并清除GMS/Wallet缓存，支持恢复。支持Magisk & KernelSU WebUI。解决Google钱包因设备认证问题导致的使用限制。

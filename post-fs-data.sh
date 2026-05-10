@@ -5,3 +5,7 @@ MODDIR=${0%/*}
 
 # 这个脚本将以 post-fs-data 模式执行(系统启动前执行)
 # 更多信息请访问 Magisk 主题
+
+# 确保备份目录存在
+mkdir -p /data/adb/gms_backup
+chmod 755 /data/adb/gms_backup

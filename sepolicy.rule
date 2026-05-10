@@ -1,1 +1,2 @@
-# 如果您的模块需要一些额外的sepolicy修补程序，请将这些规则添加到此文件中
+# GMS Wallet Cache Cleaner 模块不需要额外的sepolicy规则
+# 该模块仅操作应用缓存和数据，不涉及系统级安全策略更改

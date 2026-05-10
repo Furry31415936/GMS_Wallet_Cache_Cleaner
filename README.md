@@ -1,5 +1,7 @@
 # GMS Wallet Cache Cleaner
 
+⚠️⚠️⚠️This module is currently in the testing phase; please do not install it！
+
 **A lightweight Magisk / KernelSU module for backing up, clearing, and restoring Google Play Services & Google Wallet cache.**
 
 Designed for rooted users who frequently encounter the "Your device doesn't meet security requirements" error in Google Wallet and need to clear GMS data repeatedly.

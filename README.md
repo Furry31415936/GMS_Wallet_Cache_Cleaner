@@ -63,18 +63,6 @@ A: Local cache clearing is only a temporary workaround. For better stability, co
 
 **Q: How much space do backups take?**  
 A: Usually 50–300 MB per backup. The backup folder is automatically cleaned when the module is uninstalled.
-
----
-
-### Changelog
-
-**v1.1** (2026)
-- Improved WebUI design
-- Better backup/restore logic
-- Added timestamps in logs
-- Enhanced uninstall cleanup
-
-**v1.0**
 - Initial release
 
 ---
@@ -83,8 +71,6 @@ A: Usually 50–300 MB per backup. The backup folder is automatically cleaned wh
 
 This module is provided for educational and technical purposes only.  
 Use it at your own risk.
-
-Project licensed under [MIT License](LICENSE).
 
 ---
 

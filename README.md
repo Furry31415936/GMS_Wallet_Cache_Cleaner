@@ -12,7 +12,7 @@ Designed for rooted users who frequently encounter the "Your device doesn't meet
 - ✅ **One-click Cache Clear** (Recommended - does not log you out)
 - ✅ **Selective Data Clear** (Use with caution)
 - ✅ **One-click Restore** from latest backup
-- ✅ Supports **Magisk** and **KernelSU** (including APatch)
+- ✅ Supports **Magisk** and **KernelSU**
 - ✅ **KernelSU WebUI** support (visual web interface)
 - ✅ Auto sets execution permissions on install
 - ✅ Cleans backup folder on uninstall

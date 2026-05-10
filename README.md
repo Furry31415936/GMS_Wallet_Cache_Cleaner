@@ -1,32 +1,104 @@
-![bc5c7a34fee614e08839b511a5840873.jpg](https://i.loli.net/2020/01/30/fOFvI2o9KXqEkJr.jpg)
-# Magisk Module 模板
+# GMS Wallet Cache Cleaner
 
-`这是Magisk模块最基础的结构及说明`
-```
-Magisk-Modules-Template(20.4+).zip
-│
-├── META-INF
-│   └── com
-│       └── google
-│           └── android
-│               ├── update-binary      <--- 这个文件你可以通过下载 module_installer.sh 得到
-│               └── updater-script      <--- 这个文件应仅包含字符串 "#MAGISK"
-│
-├── customize.sh         <--- 这个文件包含 "SKIPUNZIP=0" 如需很多自定义操作 请把0改为1 
-│                                                  customize.sh 由 update-binary 执行(sourced)
-├── module.prop          <--- 这个文件是填写模块信息
-│
-├── post-fs-data.sh        <--- 这个文件可以填写系统启动前想要执行的命令
-│
-├── service.sh             <--- 这个文件可以填写系统启动后想要执行的命令
-│
-├── system.prop            <--- 这个文件将被resetprop读取 挂载改变系统build.prop对应值
-│
-├── ...  /* 模块文件的其余部分 */
-│
-```
-**SKIPUNZIP=0意味着除了重要的文件,其他的文件如果您不需要的话可以删除.**
+**A lightweight Magisk / KernelSU module for backing up, clearing, and restoring Google Play Services & Google Wallet cache.**
 
-**这是 [Magisk 官方新模块模板](https://github.com/HANA-CI-Build-Project/magisk-module-template) 您也可以去看看**
+Designed for rooted users who frequently encounter the "Your device doesn't meet security requirements" error in Google Wallet and need to clear GMS data repeatedly.
 
-有关模块和存储库的更多信息 请查看 [Magisk 官方文档](https://topjohnwu.github.io/Magisk/guides.html)
+### Features
+
+- ✅ **Automatic backup** before clearing (stored in `/data/adb/gms_backup/` with timestamp)
+- ✅ **One-click Cache Clear** (Recommended - does not log you out)
+- ✅ **Selective Data Clear** (Use with caution)
+- ✅ **One-click Restore** from latest backup
+- ✅ Supports **Magisk** and **KernelSU** (including APatch)
+- ✅ **KernelSU WebUI** support (visual web interface)
+- ✅ Auto sets execution permissions on install
+- ✅ Cleans backup folder on uninstall
+
+### Targeted Packages
+
+- `com.google.android.gms` — Google Play Services
+- `com.google.android.apps.walletnfcrel` — Google Wallet
+- `com.android.vending` — Play Store
+
+---
+
+### Installation
+
+1. Download the latest `GMS_Wallet_Cache_Cleaner.zip` from Releases
+2. Install via **Magisk** or **KernelSU** app
+3. Reboot your device
+4. Open the module's **WebUI** to use
+
+> **Magisk Users**: If the WebUI does not appear, install [KSU WebUI Standalone](https://github.com/5ec1cff/KernelSU_WebUI_Standalone) or use a WebUI-compatible manager like MMRL.
+
+---
+
+### How to Use
+
+After opening the WebUI, you will see:
+
+- **📦 Backup Current Data** – Always recommended before clearing
+- **🗑️ Clear Cache (Recommended)** – Safest option
+- **⚠️ Selective Clear Data** – May require re-login, use carefully
+- **🔄 Restore Latest Backup** – Restore from most recent backup
+- **🔄 Reboot Device** – Suggested after cleaning
+
+---
+
+### Notes & Warnings
+
+- This module only touches cache and temporary files. It does **not** modify system core files.
+- Frequent GMS clearing may still be flagged by Google servers.
+- **Always backup first** before clearing.
+- Google’s integrity detection is constantly evolving. No module can guarantee permanent results.
+- Use at your own risk. The author is not responsible for any data loss or issues caused by this module.
+
+### FAQ
+
+**Q: Wallet still shows security error after clearing?**  
+A: Local cache clearing is only a temporary workaround. For better stability, combine with **TrickyStore** + **Play Integrity Fix** modules.
+
+**Q: How much space do backups take?**  
+A: Usually 50–300 MB per backup. The backup folder is automatically cleaned when the module is uninstalled.
+
+---
+
+### Changelog
+
+**v1.1** (2026)
+- Improved WebUI design
+- Better backup/restore logic
+- Added timestamps in logs
+- Enhanced uninstall cleanup
+
+**v1.0**
+- Initial release
+
+---
+
+### Disclaimer
+
+This module is provided for educational and technical purposes only.  
+Use it at your own risk.
+
+Project licensed under [MIT License](LICENSE).
+
+---
+
+### Support
+
+Bug reports, feature requests, and pull requests are welcome.
+
+---
+
+**Recommended Repository Name**: `GMS-Wallet-Cache-Cleaner`
+
+You can now copy the content above directly into your `README.md` file.
+
+Would you like me to also provide:
+- A shorter version?
+- English + Chinese bilingual README?
+- License file content?
+
+Just let me know!

@@ -90,15 +90,4 @@ Project licensed under [MIT License](LICENSE).
 
 Bug reports, feature requests, and pull requests are welcome.
 
----
-
-**Recommended Repository Name**: `GMS-Wallet-Cache-Cleaner`
-
-You can now copy the content above directly into your `README.md` file.
-
-Would you like me to also provide:
-- A shorter version?
-- English + Chinese bilingual README?
-- License file content?
-
 Just let me know!

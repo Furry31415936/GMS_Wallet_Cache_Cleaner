@@ -32,7 +32,7 @@ Designed for rooted users who frequently encounter the "Your device doesn't meet
 3. Reboot your device
 4. Open the module's **WebUI** to use
 
-> **Magisk Users**: If the WebUI does not appear, install [KSU WebUI Standalone](https://github.com/5ec1cff/KernelSU_WebUI_Standalone) or use a WebUI-compatible manager like MMRL.
+> **Magisk Users**: Install [KSU WebUI Standalone](https://github.com/5ec1cff/KernelSU_WebUI_Standalone) or use a WebUI-compatible manager like MMRL.
 
 ---
 

@@ -1,6 +1,6 @@
 id=gms_wallet_cache_cleaner
 name=GMS Wallet Cache Cleaner
-version=v1.0
-versionCode=100
-author=Assistant
-description=一键备份并清除GMS/Wallet缓存，支持恢复。支持Magisk & KernelSU WebUI。解决Google钱包因设备认证问题导致的使用限制。
+version=v1.1
+versionCode=110
+author=Furry31415936
+description=为 Google Wallet / GMS 提供一键备份 + 清除缓存 + 恢复功能。支持 Magisk & KernelSU WebUI。解决Google钱包因设备认证缓存问题导致的使用限制。

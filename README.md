@@ -1,6 +1,6 @@
 # GMS Wallet Cache Cleaner
 
-⚠️⚠️⚠️This module is currently in the testing phase; please do not install it！
+⚠️⚠️⚠️This module is currently in the testing phase; please do not install it
 
 **A lightweight Magisk / KernelSU module for backing up, clearing, and restoring Google Play Services & Google Wallet cache.**
 

@@ -1,6 +1,1 @@
 #MAGISK
-/ui_print "************************"
-/ui_print " GMS Wallet Cache Cleaner "
-/ui_print "************************"
-set_perm_recursive(0, 0, 0755, 0644, "/data/adb/modules/gms_wallet_cache_cleaner")
-set_perm(0, 0, 0755, "/data/adb/modules/gms_wallet_cache_cleaner/clear.sh")

@@ -1,2 +1,0 @@
-# GMS Wallet Cache Cleaner 模块不需要额外的sepolicy规则
-# 该模块仅操作应用缓存和数据，不涉及系统级安全策略更改

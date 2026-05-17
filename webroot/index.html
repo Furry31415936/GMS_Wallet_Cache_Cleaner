@@ -2,48 +2,133 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GMS Wallet Cache Cleaner</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; background: #121212; color: #fff; }
-        button { padding: 15px 25px; margin: 10px; font-size: 16px; border-radius: 8px; cursor: pointer; }
-        .red { background: #c62828; color: white; border: none; }
-        .green { background: #2e7d32; color: white; border: none; }
-        .info { background: #1565c0; color: white; border: none; }
-        .warning { background: #ff9800; color: white; border: none; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .log-container { background: #1e1e1e; padding: 15px; border-radius: 8px; margin-top: 20px; max-height: 300px; overflow-y: auto; }
-        h1 { color: #4fc3f7; }
-        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
-        .success { background: #2e7d3220; border: 1px solid #2e7d32; }
-        .error { background: #c6282820; border: 1px solid #c62828; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 16px;
+            background: #121212;
+            color: #eee;
+            line-height: 1.6;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        h1 {
+            color: #4fc3f7;
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .time { text-align: center; color: #888; font-size: 13px; margin-bottom: 16px; }
+        
+        .info-card {
+            background: #1e3a5f;
+            border: 1px solid #1565c0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 13px;
+        }
+        .info-card strong { color: #4fc3f7; }
+        
+        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+            font-weight: 500;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        
+        .btn-blue { background: #1565c0; color: white; }
+        .btn-red { background: #c62828; color: white; }
+        .btn-orange { background: #e65100; color: white; }
+        .btn-green { background: #2e7d32; color: white; }
+        .btn-gray { background: #424242; color: white; }
+        
+        .log-container {
+            background: #1e1e1e;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+        .log-title {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        #log {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #ccc;
+            max-height: 250px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        #log .success { color: #81c784; }
+        #log .error { color: #e57373; }
+        #log .info { color: #64b5f6; }
+        #log .warn { color: #ffb74d; }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-top: 6px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>💰 GMS / Google Wallet 缓存清理器</h1>
-        <p>用于解决Google钱包因设备认证问题导致的使用限制</p>
-        <p>当前时间: <span id="time"></span></p>
+        <p class="subtitle">解决因设备认证缓存问题导致的Google钱包限制</p>
+        <p class="time">🕐 <span id="time"></span></p>
         
-        <div class="status success">
-            <strong>💡 使用说明:</strong><br>
-            1. 点击"📦 备份当前GMS数据"进行备份<br>
-            2. 点击"🗑️ 清除Cache"清理缓存<br>
-            3. 点击"🔄 重启设备"使更改生效<br>
-            4. 如有问题可点击"🔄 一键恢复备份"
+        <div class="info-card">
+            <strong>💡 操作步骤</strong><br>
+            ① 先备份当前GMS数据<br>
+            ② 清除缓存<br>
+            ③ 重启设备<br>
+            ④ 如遇到问题可恢复备份
         </div>
         
-        <button class="info" onclick="backup()">📦 备份当前GMS数据</button>
-        <button class="red" onclick="clearCache()">🗑️ 清除Cache（推荐）</button>
-        <button class="warning" onclick="clearDataSelective()">⚠️ 选择性清除Data（谨慎）</button>
-        <button class="green" onclick="restore()">🔄 一键恢复备份</button>
-        <button class="info" onclick="reboot()">🔄 重启设备</button>
+        <div class="btn-group">
+            <button class="btn btn-blue" onclick="backup()" id="btnBackup">📦 备份当前GMS数据</button>
+            <button class="btn btn-red" onclick="clearCache()" id="btnCache">🗑️ 清除Cache（推荐）</button>
+            <button class="btn btn-orange" onclick="clearData()" id="btnData">⚠️ 选择性清除Data</button>
+            <button class="btn btn-green" onclick="restore()" id="btnRestore">🔄 恢复最新备份</button>
+            <button class="btn btn-gray" onclick="listBackups()" id="btnList">📋 查看备份列表</button>
+            <button class="btn btn-gray" onclick="reboot()" id="btnReboot">🔁 重启设备</button>
+        </div>
         
         <div class="log-container">
-            <h3>操作日志:</h3>
-            <pre id="log"></pre>
+            <div class="log-title">📝 操作日志</div>
+            <pre id="log">[系统就绪] 请选择要执行的操作</pre>
+            <div class="status-bar">
+                <span id="logCount">0 条</span>
+                <span onclick="clearLog()" style="cursor:pointer;color:#1565c0;">清除日志</span>
+            </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

@@ -1,5 +1,9 @@
-# 这个脚本会在删除模块的时候执行
+#!/system/bin/sh
+# GMS Wallet Cache Cleaner - 卸载脚本
+# 模块卸载时自动清理外部备份目录
 
-# 删除备份目录中的模块相关文件（可选，保留用户备份以防万一）
-# 如果要完全清理，取消下面的注释
-# rm -rf /data/adb/gms_backup/
+# 删除所有备份数据
+rm -rf /data/adb/gms_backup
+
+echo "GMS Wallet Cache Cleaner 已卸载"
+echo "备份目录已清理: /data/adb/gms_backup"

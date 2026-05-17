@@ -3,4 +3,4 @@ name=GMS Wallet Cache Cleaner
 version=v1.2
 versionCode=120
 author=Furry31415936
-description=不退出账号 · 不解绑手表 · 仅刷新风险状态。三级清理：Safe(仅缓存) / Refresh(推荐) / Experimental(探索)。支持 Magisk & KernelSU WebUI。
+description=CN: 不退出账号·不解除手表配对·三级清理(安全/刷新/探索) | EN: Keep account & watch pairing · 3-level cleaning (Safe/Refresh/Experimental) · Clears cached risk state without wiping credentials.

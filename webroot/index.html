@@ -15,52 +15,82 @@
         }
         .container { max-width: 600px; margin: 0 auto; }
         h1 {
-            color: #4fc3f7;
+            background: linear-gradient(135deg, #4fc3f7, #81c784);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 22px;
             text-align: center;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
         .version {
             text-align: center;
             color: #666;
-            font-size: 12px;
-            margin-bottom: 4px;
+            font-size: 11px;
+            margin-bottom: 2px;
         }
         .subtitle {
             text-align: center;
             color: #aaa;
-            font-size: 14px;
-            margin-bottom: 16px;
+            font-size: 13px;
+            margin-bottom: 12px;
         }
-        .time { text-align: center; color: #888; font-size: 13px; margin-bottom: 16px; }
+        .time { text-align: center; color: #666; font-size: 12px; margin-bottom: 12px; }
+        
+        /* Language toggle */
+        .lang-bar {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 12px;
+        }
+        .lang-btn {
+            padding: 4px 16px;
+            font-size: 12px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            border-color: #4fc3f7;
+            color: #4fc3f7;
+            background: #1e3a5f44;
+        }
+        .lang-btn:hover { border-color: #666; }
+        .lang-zh, .lang-en { transition: opacity 0.3s; }
         
         .info-card {
             background: #1e3a5f;
             border: 1px solid #1565c0;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             font-size: 13px;
         }
         .info-card strong { color: #4fc3f7; }
         
         .section-title {
-            font-size: 14px;
-            color: #aaa;
-            margin-bottom: 8px;
-            margin-top: 16px;
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 6px;
+            margin-top: 14px;
             padding-bottom: 4px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #2a2a2a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        .btn-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        .btn-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 12px 20px;
-            font-size: 14px;
+            padding: 11px 18px;
+            font-size: 13px;
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -71,42 +101,40 @@
         .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         
         .btn-safe { background: #2e7d32; color: white; }
-        .btn-refresh { background: #f57f17; color: white; }
-        .btn-experimental { background: #c62828; color: white; }
+        .btn-refresh { background: #e65100; color: white; }
+        .btn-experimental { background: #b71c1c; color: white; }
         .btn-blue { background: #1565c0; color: white; }
         .btn-gray { background: #424242; color: white; }
-        .btn-purple { background: #6a1b9a; color: white; }
-        
-        .btn-sm { padding: 8px 14px; font-size: 12px; }
+        .btn-purple { background: #4a148c; color: white; }
         
         .level-badge {
             display: inline-block;
             padding: 2px 8px;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
         }
         .level-safe { background: #2e7d3244; color: #81c784; border: 1px solid #2e7d32; }
-        .level-refresh { background: #f57f1744; color: #ffb74d; border: 1px solid #f57f17; }
-        .level-experimental { background: #c6282844; color: #e57373; border: 1px solid #c62828; }
+        .level-refresh { background: #e6510044; color: #ffb74d; border: 1px solid #e65100; }
+        .level-experimental { background: #b71c1c44; color: #e57373; border: 1px solid #b71c1c; }
         
         .log-container {
             background: #1e1e1e;
-            border: 1px solid #333;
-            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px;
             padding: 12px;
-            margin-top: 16px;
+            margin-top: 14px;
         }
         .log-title {
-            font-size: 14px;
+            font-size: 12px;
             color: #888;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         #log {
             font-family: 'Consolas', 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11px;
             color: #ccc;
-            max-height: 250px;
+            max-height: 220px;
             overflow-y: auto;
             white-space: pre-wrap;
             word-break: break-all;
@@ -119,83 +147,116 @@
         .status-bar {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            color: #666;
+            font-size: 11px;
+            color: #555;
             margin-top: 6px;
         }
+        .status-bar span[onclick] { cursor: pointer; color: #1565c0; }
         
-        .mode-selector {
-            display: flex;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-        .mode-btn {
-            flex: 1;
-            padding: 8px;
-            font-size: 12px;
-            border: 1px solid #333;
-            border-radius: 6px;
-            background: #1e1e1e;
-            color: #888;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s;
-        }
-        .mode-btn.active { 
-            border-color: #4fc3f7;
-            color: #4fc3f7;
-            background: #1e3a5f;
-        }
+        .badge-group { margin: 6px 0 4px; display: flex; gap: 6px; flex-wrap: wrap; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>💰 GMS Wallet Cache Cleaner</h1>
-        <p class="version">v1.2 — 分层清理系统</p>
-        <p class="subtitle">不退出账号 · 不解除手表配对 · 仅刷新风险状态</p>
+        <p class="version">v1.2 — <span class="lang-zh">分层清理系统</span><span class="lang-en" style="display:none">Layered Cleaning System</span></p>
+        <p class="subtitle">
+            <span class="lang-zh">🛡️ 不退出账号 · 不解除手表配对 · 仅刷新风险状态</span>
+            <span class="lang-en" style="display:none">🛡️ Keep account · Keep watch pairing · Refresh risk state only</span>
+        </p>
         <p class="time">🕐 <span id="time"></span></p>
         
-        <div class="info-card">
-            <strong>💡 选择清理级别</strong><br>
-            <span class="level-badge level-safe">🟢 Safe</span> 仅清缓存 — 不影响任何功能<br>
-            <span class="level-badge level-refresh">🟡 Refresh</span> 清缓存 + 刷新进程 — 推荐<br>
-            <span class="level-badge level-experimental">🔴 Experimental</span> 探索清理 — 高风险<br>
-            <br>
-            <strong>⚠️ 操作顺序建议:</strong><br>
-            ① 先 <strong>snapshot</strong> 记录状态<br>
-            ② 用 <strong>Safe</strong> 或 <strong>Refresh</strong><br>
-            ③ 重启设备<br>
-            ④ 再次 <strong>snapshot</strong> → <strong>diff</strong> 发现变化
+        <!-- Language Switch -->
+        <div class="lang-bar">
+            <button class="lang-btn active" onclick="setLang('zh')" id="langZh">🇨🇳 中文</button>
+            <button class="lang-btn" onclick="setLang('en')" id="langEn">🇬🇧 English</button>
         </div>
         
-        <div class="section-title">🧹 清理操作</div>
+        <!-- Info Card -->
+        <div class="info-card">
+            <strong class="lang-zh">💡 选择清理级别</strong>
+            <strong class="lang-en" style="display:none">💡 Choose Cleaning Level</strong>
+            <br>
+            <div class="badge-group">
+                <span class="level-badge level-safe">🟢 Safe</span>
+                <span class="level-badge level-refresh">🟡 Refresh ⭐</span>
+                <span class="level-badge level-experimental">🔴 Experimental</span>
+            </div>
+            <div class="lang-zh">
+                <strong>Safe</strong> 仅清缓存 — 不影响任何功能<br>
+                <strong>Refresh</strong> 清缓存 + 刷新进程 — ⭐推荐<br>
+                <strong>Experimental</strong> 探索清理 — 高风险<br>
+                <br>
+                <strong>⚠️ 建议流程:</strong><br>
+                ① 先用 <code>snapshot</code> 记录状态 → ② 选 Safe 或 Refresh 清理<br>
+                ③ 重启 → ④ 再次 <code>snapshot</code> → <code>diff</code> 发现变化
+            </div>
+            <div class="lang-en" style="display:none">
+                <strong>Safe</strong> Clears cache only — no side effects<br>
+                <strong>Refresh</strong> Cache + restart processes — ⭐ Recommended<br>
+                <strong>Experimental</strong> Explores files/no_backup — higher risk<br>
+                <br>
+                <strong>⚠️ Workflow:</strong><br>
+                ① <code>snapshot</code> to save state → ② Use Safe or Refresh<br>
+                ③ Reboot → ④ <code>snapshot</code> again → <code>diff</code> to find changes
+            </div>
+        </div>
+        
+        <!-- Cleaning Section -->
+        <div class="section-title">
+            <span class="lang-zh">🧹 清理操作</span>
+            <span class="lang-en" style="display:none">🧹 Cleaning Operations</span>
+        </div>
         <div class="btn-group">
             <button class="btn btn-safe" onclick="execCmd('safe')" id="btnSafe">
-                🟢 Safe 安全模式 — 仅清缓存
+                <span class="lang-zh">🟢 Safe 安全模式 — 仅清缓存</span>
+                <span class="lang-en" style="display:none">🟢 Safe Mode — Cache only</span>
             </button>
             <button class="btn btn-refresh" onclick="execCmd('refresh')" id="btnRefresh">
-                🟡 Refresh 刷新模式 — 推荐
+                <span class="lang-zh">🟡 Refresh 刷新模式 — ⭐ 推荐</span>
+                <span class="lang-en" style="display:none">🟡 Refresh Mode — ⭐ Recommended</span>
             </button>
             <button class="btn btn-experimental" onclick="execCmd('experimental')" id="btnExperimental">
-                🔴 Experimental 探索模式 — 慎用
+                <span class="lang-zh">🔴 Experimental 探索模式 — 慎用</span>
+                <span class="lang-en" style="display:none">🔴 Experimental Mode — Use with caution</span>
             </button>
         </div>
         
-        <div class="section-title">📦 辅助功能</div>
+        <!-- Tools Section -->
+        <div class="section-title">
+            <span class="lang-zh">📦 辅助功能</span>
+            <span class="lang-en" style="display:none">📦 Tools</span>
+        </div>
         <div class="btn-group">
-            <button class="btn btn-blue" onclick="execCmd('backup')" id="btnBackup">📦 全量备份</button>
-            <button class="btn btn-purple" onclick="execCmd('snapshot')" id="btnSnapshot">📸 文件状态快照</button>
-            <button class="btn btn-purple" onclick="execCmd('diff')" id="btnDiff">📊 对比两次快照</button>
-            <button class="btn btn-gray" onclick="execCmd('list')" id="btnList">📋 查看备份和快照</button>
-            <button class="btn btn-gray" onclick="execCmd('reboot')" id="btnReboot">🔁 重启设备</button>
+            <button class="btn btn-blue" onclick="execCmd('backup')" id="btnBackup">
+                📦 <span class="lang-zh">全量备份</span><span class="lang-en" style="display:none">Full Backup</span>
+            </button>
+            <button class="btn btn-purple" onclick="execCmd('snapshot')" id="btnSnapshot">
+                📸 <span class="lang-zh">文件状态快照</span><span class="lang-en" style="display:none">File Snapshot</span>
+            </button>
+            <button class="btn btn-purple" onclick="execCmd('diff')" id="btnDiff">
+                📊 <span class="lang-zh">对比快照</span><span class="lang-en" style="display:none">Compare Snapshots</span>
+            </button>
+            <button class="btn btn-gray" onclick="execCmd('list')" id="btnList">
+                📋 <span class="lang-zh">查看备份/快照</span><span class="lang-en" style="display:none">List Backups/Snapshots</span>
+            </button>
+            <button class="btn btn-gray" onclick="execCmd('reboot')" id="btnReboot">
+                🔁 <span class="lang-zh">重启设备</span><span class="lang-en" style="display:none">Reboot Device</span>
+            </button>
         </div>
         
+        <!-- Log -->
         <div class="log-container">
-            <div class="log-title">📝 操作日志</div>
-            <pre id="log">[系统就绪] v1.2 分层清理系统已加载</pre>
+            <div class="log-title">
+                📝 <span class="lang-zh">操作日志</span>
+                <span class="lang-en" style="display:none">Operation Log</span>
+            </div>
+            <pre id="log">
+<span class="lang-zh">[系统就绪] v1.2 分层清理系统已加载</span>
+<span class="lang-en" style="display:none">[System Ready] v1.2 Layered Cleaning System loaded</span></pre>
             <div class="status-bar">
-                <span id="logCount">0 条</span>
-                <span onclick="clearLog()" style="cursor:pointer;color:#1565c0;">清除日志</span>
+                <span id="logCount">0</span>
+                <span onclick="clearLog()"><span class="lang-zh">清除日志</span><span class="lang-en" style="display:none">Clear</span></span>
             </div>
         </div>
     </div>

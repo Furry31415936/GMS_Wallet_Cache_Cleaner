@@ -6,6 +6,7 @@
 const MODULE_PATH = '/data/adb/modules/gms_wallet_cache_cleaner';
 const SCRIPT_PATH = MODULE_PATH + '/clear.sh';
 
+let currentLang = 'zh';
 let logCount = 0;
 let operationInProgress = false;
 
@@ -158,20 +159,63 @@ function execCmd(cmd) {
     }
 }
 
+// ========== 双语切换 ==========
+function setLang(lang) {
+    currentLang = lang;
+    
+    // Switch buttons
+    document.getElementById('langZh').classList.toggle('active', lang === 'zh');
+    document.getElementById('langEn').classList.toggle('active', lang === 'en');
+    
+    // Toggle all zh/en elements
+    document.querySelectorAll('.lang-zh').forEach(el => {
+        el.style.display = lang === 'zh' ? '' : 'none';
+    });
+    document.querySelectorAll('.lang-en').forEach(el => {
+        el.style.display = lang === 'en' ? '' : 'none';
+    });
+    
+    // Update time format
+    updateClock();
+    
+    // Save preference
+    try { localStorage.setItem('gms_cleaner_lang', lang); } catch(e) {}
+}
+
+function updateClock() {
+    const timeEl = document.getElementById('time');
+    if (!timeEl) return;
+    const locale = currentLang === 'zh' ? 'zh-CN' : 'en-US';
+    timeEl.textContent = new Date().toLocaleString(locale, { hour12: false });
+}
+
 // ========== 页面初始化 ==========
 function init() {
     const timeEl = document.getElementById('time');
     if (timeEl) {
-        function updateTime() {
-            timeEl.textContent = new Date().toLocaleString('zh-CN', { hour12: false });
-        }
-        updateTime();
-        setInterval(updateTime, 1000);
+        updateClock();
+        setInterval(updateClock, 1000);
     }
     
-    appendLog('GMS缓存清理器 v1.2 已就绪', 'success');
-    appendLog('推荐使用 🟡 Refresh 模式', 'info');
-    appendLog('先用 snapshot 记录状态，操作后再 diff 对比', 'info');
+    // Restore language preference
+    try {
+        const saved = localStorage.getItem('gms_cleaner_lang');
+        if (saved === 'en') setLang('en');
+    } catch(e) {}
+    
+    const readyMsg = currentLang === 'zh' 
+        ? 'GMS缓存清理器 v1.2 已就绪' 
+        : 'GMS Cache Cleaner v1.2 ready';
+    const tip1 = currentLang === 'zh'
+        ? '推荐使用 🟡 Refresh 模式'
+        : 'Recommended: 🟡 Refresh mode';
+    const tip2 = currentLang === 'zh'
+        ? '先用 snapshot 记录状态，操作后再 diff 对比'
+        : 'Use snapshot first, then diff to find changes';
+    
+    appendLog(readyMsg, 'success');
+    appendLog(tip1, 'info');
+    appendLog(tip2, 'info');
 }
 
 if (document.readyState === 'loading') {

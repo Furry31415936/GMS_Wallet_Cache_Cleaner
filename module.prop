@@ -1,6 +1,6 @@
 id=gms_wallet_cache_cleaner
 name=GMS Wallet Cache Cleaner
 version=v1.2
-versionCode=120
+versionCode=121
 author=Furry31415936
-description=CN: 不退出账号·不解除手表配对·三级清理(安全/刷新/探索) | EN: Keep account & watch pairing · 3-level cleaning (Safe/Refresh/Experimental) · Clears cached risk state without wiping credentials.
+description=CN: 不退出账号·不解除手表配对·三级清理(安全/刷新/探索)含md5快照+优雅进程终止 | EN: Keep account & watch pairing · 3-level cleaning · md5 snapshot · graceful SIGTERM→SIGKILL fallback

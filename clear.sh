@@ -162,21 +162,41 @@ do_refresh() {
     done
     
     # 2. 关键：杀掉 gms.unstable 进程（DroidGuard/Integrity运行在此）
+    #   优先级：先 SIGTERM(kill) 尝试优雅退出 → 2秒后未退出再 SIGKILL(kill -9)
+    #   这样可以避免强制杀进程导致的 sqlite 写损坏
     log "- 正在处理 com.google.android.gms.unstable..."
     local unstable_pids=$(pidof com.google.android.gms.unstable 2>/dev/null)
     if [ -n "$unstable_pids" ]; then
-        kill -9 $unstable_pids 2>/dev/null
-        log "✓ 已终止 unstable 进程 (PID: $unstable_pids)"
+        # 先尝试 SIGTERM（优雅停止）
+        kill $unstable_pids 2>/dev/null
+        log "✓ 已发送 SIGTERM → unstable (PID: $unstable_pids)"
         sleep 2
+        
+        # 检查是否仍在运行，如果是则强杀
+        local still_running=$(pidof com.google.android.gms.unstable 2>/dev/null)
+        if [ -n "$still_running" ]; then
+            kill -9 $still_running 2>/dev/null
+            log "  ⚠️ SIGTERM 超时，回退 SIGKILL (PID: $still_running)"
+        else
+            log "  ✓ 已优雅退出"
+        fi
+        sleep 1
     else
         log "- unstable 进程未运行"
     fi
     
-    # 3. 杀掉 Wallet 进程
+    # 3. 杀掉 Wallet 进程（同样先 SIGTERM）
     local wallet_pids=$(pidof com.google.android.apps.walletnfcrel 2>/dev/null)
     if [ -n "$wallet_pids" ]; then
-        kill -9 $wallet_pids 2>/dev/null
-        log "✓ 已终止 Wallet 进程"
+        kill $wallet_pids 2>/dev/null
+        sleep 2
+        local wallet_still=$(pidof com.google.android.apps.walletnfcrel 2>/dev/null)
+        if [ -n "$wallet_still" ]; then
+            kill -9 $wallet_still 2>/dev/null
+            log "✓ 已终止 Wallet 进程 (SIGKILL fallback)"
+        else
+            log "✓ 已终止 Wallet 进程 (SIGTERM)"
+        fi
         sleep 1
     fi
     
@@ -218,18 +238,22 @@ do_experimental() {
     log "   强烈建议重启设备"
 }
 
-# --- 文件快照（用于研究哪文件变化） ---
+# --- 文件快照（用于研究哪些文件变化） ---
+# 记录：size + mtime + md5 校验和
+# md5sum 能发现"内容变了但大小没变"的情况（如 protobuf/xml 原地修改）
 do_snapshot() {
     ensure_dir "$SNAPSHOT_DIR"
     local snapshot_file="$SNAPSHOT_DIR/snapshot_$TIMESTAMP.txt"
     
-    log "📸 正在创建GMS文件状态快照..."
+    log "📸 正在创建GMS文件状态快照（含md5校验和）..."
     log "   保存到: $snapshot_file"
+    log "   提示: 如果 diff 发现文件大小未变但内容已变，说明是原地修改"
     
     {
         echo "============================================"
-        echo "GMS File Snapshot"
+        echo "GMS File Snapshot (with md5 checksums)"
         echo "Time: $(date '+%Y-%m-%d %H:%M:%S')"
+        echo "Format: size | mtime | md5 | path"
         echo "============================================"
         echo ""
         
@@ -239,14 +263,23 @@ do_snapshot() {
                 find "/data/data/$pkg" -type f \
                     -not -path "*/cache/*" \
                     -not -path "*/code_cache/*" \
-                    -printf "%s %TY-%Tm-%Td %TH:%TM:%TS %p\n" 2>/dev/null | sort -k4
+                    2>/dev/null | while read -r f; do
+                    if [ -f "$f" ]; then
+                        local size=$(stat -c%s "$f" 2>/dev/null)
+                        local mtime=$(stat -c%y "$f" 2>/dev/null | cut -d. -f1)
+                        local md5=$(md5sum "$f" 2>/dev/null | cut -d' ' -f1)
+                        [ -z "$md5" ] && md5="NO_CHECKSUM"
+                        echo "$size | $mtime | $md5 | $f"
+                    fi
+                done | sort -t'|' -k4
                 echo ""
             fi
         done
     } > "$snapshot_file"
     
     log "✅ 快照已创建: $(wc -l < "$snapshot_file") 行"
-    log "   你可以对比两次快照来发现变化文件"
+    log "   你可以在不同状态下多次 snapshot 后用 diff 对比"
+    log "   关注：大小不变但md5变化的文件 → 很可能是状态文件"
 }
 
 # --- 快照对比（纯POSIX sh，不依赖bash数组） ---

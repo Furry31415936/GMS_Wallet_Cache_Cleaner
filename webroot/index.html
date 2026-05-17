@@ -18,13 +18,19 @@
             color: #4fc3f7;
             font-size: 22px;
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
+        }
+        .version {
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 4px;
         }
         .subtitle {
             text-align: center;
             color: #aaa;
             font-size: 14px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .time { text-align: center; color: #888; font-size: 13px; margin-bottom: 16px; }
         
@@ -38,14 +44,23 @@
         }
         .info-card strong { color: #4fc3f7; }
         
-        .btn-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .section-title {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 8px;
+            margin-top: 16px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .btn-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 14px 20px;
-            font-size: 15px;
+            padding: 12px 20px;
+            font-size: 14px;
             border: none;
             border-radius: 10px;
             cursor: pointer;
@@ -55,11 +70,25 @@
         .btn:active { transform: scale(0.98); }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         
+        .btn-safe { background: #2e7d32; color: white; }
+        .btn-refresh { background: #f57f17; color: white; }
+        .btn-experimental { background: #c62828; color: white; }
         .btn-blue { background: #1565c0; color: white; }
-        .btn-red { background: #c62828; color: white; }
-        .btn-orange { background: #e65100; color: white; }
-        .btn-green { background: #2e7d32; color: white; }
         .btn-gray { background: #424242; color: white; }
+        .btn-purple { background: #6a1b9a; color: white; }
+        
+        .btn-sm { padding: 8px 14px; font-size: 12px; }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .level-safe { background: #2e7d3244; color: #81c784; border: 1px solid #2e7d32; }
+        .level-refresh { background: #f57f1744; color: #ffb74d; border: 1px solid #f57f17; }
+        .level-experimental { background: #c6282844; color: #e57373; border: 1px solid #c62828; }
         
         .log-container {
             background: #1e1e1e;
@@ -94,34 +123,76 @@
             color: #666;
             margin-top: 6px;
         }
+        
+        .mode-selector {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 12px;
+            border: 1px solid #333;
+            border-radius: 6px;
+            background: #1e1e1e;
+            color: #888;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .mode-btn.active { 
+            border-color: #4fc3f7;
+            color: #4fc3f7;
+            background: #1e3a5f;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>💰 GMS / Google Wallet 缓存清理器</h1>
-        <p class="subtitle">解决因设备认证缓存问题导致的Google钱包限制</p>
+        <h1>💰 GMS Wallet Cache Cleaner</h1>
+        <p class="version">v1.2 — 分层清理系统</p>
+        <p class="subtitle">不退出账号 · 不解除手表配对 · 仅刷新风险状态</p>
         <p class="time">🕐 <span id="time"></span></p>
         
         <div class="info-card">
-            <strong>💡 操作步骤</strong><br>
-            ① 先备份当前GMS数据<br>
-            ② 清除缓存<br>
+            <strong>💡 选择清理级别</strong><br>
+            <span class="level-badge level-safe">🟢 Safe</span> 仅清缓存 — 不影响任何功能<br>
+            <span class="level-badge level-refresh">🟡 Refresh</span> 清缓存 + 刷新进程 — 推荐<br>
+            <span class="level-badge level-experimental">🔴 Experimental</span> 探索清理 — 高风险<br>
+            <br>
+            <strong>⚠️ 操作顺序建议:</strong><br>
+            ① 先 <strong>snapshot</strong> 记录状态<br>
+            ② 用 <strong>Safe</strong> 或 <strong>Refresh</strong><br>
             ③ 重启设备<br>
-            ④ 如遇到问题可恢复备份
+            ④ 再次 <strong>snapshot</strong> → <strong>diff</strong> 发现变化
         </div>
         
+        <div class="section-title">🧹 清理操作</div>
         <div class="btn-group">
-            <button class="btn btn-blue" onclick="backup()" id="btnBackup">📦 备份当前GMS数据</button>
-            <button class="btn btn-red" onclick="clearCache()" id="btnCache">🗑️ 清除Cache（推荐）</button>
-            <button class="btn btn-orange" onclick="clearData()" id="btnData">⚠️ 选择性清除Data</button>
-            <button class="btn btn-green" onclick="restore()" id="btnRestore">🔄 恢复最新备份</button>
-            <button class="btn btn-gray" onclick="listBackups()" id="btnList">📋 查看备份列表</button>
-            <button class="btn btn-gray" onclick="reboot()" id="btnReboot">🔁 重启设备</button>
+            <button class="btn btn-safe" onclick="execCmd('safe')" id="btnSafe">
+                🟢 Safe 安全模式 — 仅清缓存
+            </button>
+            <button class="btn btn-refresh" onclick="execCmd('refresh')" id="btnRefresh">
+                🟡 Refresh 刷新模式 — 推荐
+            </button>
+            <button class="btn btn-experimental" onclick="execCmd('experimental')" id="btnExperimental">
+                🔴 Experimental 探索模式 — 慎用
+            </button>
+        </div>
+        
+        <div class="section-title">📦 辅助功能</div>
+        <div class="btn-group">
+            <button class="btn btn-blue" onclick="execCmd('backup')" id="btnBackup">📦 全量备份</button>
+            <button class="btn btn-purple" onclick="execCmd('snapshot')" id="btnSnapshot">📸 文件状态快照</button>
+            <button class="btn btn-purple" onclick="execCmd('diff')" id="btnDiff">📊 对比两次快照</button>
+            <button class="btn btn-gray" onclick="execCmd('list')" id="btnList">📋 查看备份和快照</button>
+            <button class="btn btn-gray" onclick="execCmd('reboot')" id="btnReboot">🔁 重启设备</button>
         </div>
         
         <div class="log-container">
             <div class="log-title">📝 操作日志</div>
-            <pre id="log">[系统就绪] 请选择要执行的操作</pre>
+            <pre id="log">[系统就绪] v1.2 分层清理系统已加载</pre>
             <div class="status-bar">
                 <span id="logCount">0 条</span>
                 <span onclick="clearLog()" style="cursor:pointer;color:#1565c0;">清除日志</span>

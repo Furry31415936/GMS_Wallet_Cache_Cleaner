@@ -1,6 +1,7 @@
 ##########################################################################################
 # GMS Wallet Cache Cleaner - Installer Script
 # 支持 Magisk 和 KernelSU
+# v1.2
 ##########################################################################################
 
 # 模块ID（必须与module.prop一致）
@@ -15,8 +16,8 @@ PROPFILE=false
 # 不需要post-fs-data脚本
 POSTFSDATA=false
 
-# 不需要late_start服务脚本
-LATESTARTSERVICE=false
+# ✅ 启用late_start服务脚本（service.sh 开机会自动运行）
+LATESTARTSERVICE=true
 
 ##########################################################################################
 # 安装信息
@@ -25,7 +26,7 @@ LATESTARTSERVICE=false
 print_modname() {
   ui_print "********************************"
   ui_print "   GMS Wallet Cache Cleaner     "
-  ui_print "    v1.1 - 备份/清除/恢复       "
+  ui_print "    v1.2 - 分层清理系统         "
   ui_print "********************************"
 }
 
@@ -41,13 +42,13 @@ REPLACE=""
 
 set_permissions() {
   # 默认权限
-  set_perm_recursive $MODPATH 0 0 0755 0644 u:object_r:system_file:s0
+  set_perm_recursive $MODPATH 0 0 0755 0644
   
   # 可执行脚本
-  set_perm $MODPATH/clear.sh 0 0 0755 u:object_r:system_file:s0
+  set_perm $MODPATH/clear.sh 0 0 0755
   
-  # WebUI目录
-  set_perm_recursive $MODPATH/webroot 0 0 0755 0644 u:object_r:system_file:s0
+  # ❌ WebUI 目录权限由 KernelSU 自动处理，不再手动设置
+  # ✅ 只确保 clear.sh 有执行权限即可
   
   ui_print "- 权限设置完成"
 }
@@ -61,5 +62,5 @@ mkdir -p /data/adb/gms_backup
 chmod 755 /data/adb/gms_backup
 
 ui_print "- 备份目录已创建: /data/adb/gms_backup"
-ui_print "- GMS Wallet Cache Cleaner 安装完成"
+ui_print "- GMS Wallet Cache Cleaner v1.2 安装完成"
 ui_print "- 请重启设备后使用 WebUI 操作"

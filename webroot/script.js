@@ -2,10 +2,12 @@
  * GMS Wallet Cache Cleaner v1.2 - WebUI 交互脚本
  * 分层清理系统：safe | refresh | experimental
  *
- * 兼容性:
- * - KernelSU WebUI (kernelsu.exec 原生API)
- * - Magisk + WebUI Standalone (fetch /exec 回退)
- * - MMRL (支持 kernelsu JS 库)
+ * 兼容性说明（重要）:
+ * - 此 WebUI 能否正常运行完全取决于宿主 Manager 的实现
+ * - ✅ KernelSU WebUI: kernelsu.exec() 原生 API，稳定可用
+ * - ⚠️ Magisk + WebUI Standalone: fetch('/exec') 需要管理器支持该端点
+ * - ❌ 原生 Magisk Manager: 不支持 WebUI
+ * - 模块本身不提供 /exec 后端，这由管理器环境注入
  */
 
 // ========== 动态路径解析 ==========
@@ -67,15 +69,9 @@ function clearLog() {
     }
 }
 
-// ========== 命令执行（兼容 KernelSU + Magisk） ==========
+// ========== 命令执行 （双模式） ==========
 async function shellExec(cmd) {
-    /**
-     * KernelSU 提供 kernelsu.exec() 原生 JS 接口
-     * Magisk + WebUI Standalone 使用 fetch('/exec') API
-     * 优先使用 kernelsu，不可用时回退到 fetch
-     */
-    
-    // 方法1: KernelSU 原生 API
+    // 模式A: KernelSU 原生 API（推荐、稳定）
     if (typeof kernelsu !== 'undefined' && kernelsu.exec) {
         return new Promise((resolve, reject) => {
             kernelsu.exec(cmd, {}, {
@@ -86,7 +82,7 @@ async function shellExec(cmd) {
         });
     }
     
-    // 方法2: 通用 fetch API
+    // 模式B: fetch('/exec') 回退（取决于管理器实现）
     try {
         const response = await fetch('/exec', {
             method: 'POST',
@@ -263,8 +259,8 @@ function init() {
     const tip2 = currentLang === 'zh'
         ? '先用 snapshot 记录状态，操作后再 diff 对比'
         : 'Use snapshot first, then diff for comparison';
-    const kernel = typeof kernelsu !== 'undefined' ? 'KernelSU' : 'WebUI';
-    const tip3 = 'API: ' + kernel;
+    const apiMode = typeof kernelsu !== 'undefined' ? 'KernelSU native' : 'fetch /exec (fallback)';
+    const tip3 = 'API: ' + apiMode;
     
     appendLog(readyMsg, 'success');
     appendLog(tip3, 'info');

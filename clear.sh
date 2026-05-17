@@ -249,27 +249,47 @@ do_snapshot() {
     log "   你可以对比两次快照来发现变化文件"
 }
 
-# --- 快照对比 ---
+# --- 快照对比（纯POSIX sh，不依赖bash数组） ---
 do_diff() {
-    local snapshots=()
-    for f in "$SNAPSHOT_DIR"/snapshot_*.txt; do
-        [ -f "$f" ] && snapshots+=("$f")
-    done
+    # 用while read + 临时文件列表替代数组
+    local snapshot_list="/tmp/gms_snapshot_list.$$"
+    ls -t "$SNAPSHOT_DIR"/snapshot_*.txt 2>/dev/null > "$snapshot_list"
     
-    local count=${#snapshots[@]}
+    local count=0
+    while IFS= read -r line; do
+        count=$((count + 1))
+    done < "$snapshot_list"
+    
     if [ "$count" -lt 2 ]; then
         log "✗ 需要至少2个快照才能对比 (当前: $count)"
         log "   请先在不同状态下(如Wallet FAIL/PASS)执行snapshot"
+        rm -f "$snapshot_list"
         return
     fi
     
-    # 取最新的两个
-    local latest="${snapshots[$count-1]}"
-    local prev="${snapshots[$count-2]}"
+    # 取最新的两个（第1行和第2行）
+    local latest=""
+    local prev=""
+    local line_num=0
+    while IFS= read -r line; do
+        line_num=$((line_num + 1))
+        if [ "$line_num" -eq 1 ]; then
+            latest="$line"
+        elif [ "$line_num" -eq 2 ]; then
+            prev="$line"
+        fi
+    done < "$snapshot_list"
+    
+    rm -f "$snapshot_list"
+    
+    if [ -z "$latest" ] || [ -z "$prev" ]; then
+        log "✗ 无法获取快照文件"
+        return
+    fi
     
     log "📊 对比快照:"
-    log "   之前: $(basename "$prev")"
     log "   之后: $(basename "$latest")"
+    log "   之前: $(basename "$prev")"
     
     local diff_output=$(diff "$prev" "$latest" 2>/dev/null)
     if [ -z "$diff_output" ]; then
@@ -288,7 +308,8 @@ do_list() {
     echo "📂 GMS备份列表"
     echo "================"
     if [ -d "$BACKUP_DIR" ]; then
-        ls -dt "$BACKUP_DIR"/*/ 2>/dev/null | while read dir; do
+        ls -dt "$BACKUP_DIR"/*/ 2>/dev/null | while read -r dir; do
+            [ -z "$dir" ] && continue
             local dirname=$(basename "$dir")
             local size=$(du -sh "$dir" 2>/dev/null | cut -f1)
             echo "  📦 $dirname  ($size)"
@@ -299,7 +320,8 @@ do_list() {
     echo "📸 快照列表"
     echo "================"
     if [ -d "$SNAPSHOT_DIR" ]; then
-        ls -t "$SNAPSHOT_DIR"/snapshot_*.txt 2>/dev/null | while read f; do
+        ls -t "$SNAPSHOT_DIR"/snapshot_*.txt 2>/dev/null | while read -r f; do
+            [ -z "$f" ] && continue
             local fname=$(basename "$f")
             local lines=$(wc -l < "$f")
             echo "  📄 $fname  ($lines 行)"
